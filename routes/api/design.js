@@ -8,7 +8,18 @@ const upload = multer();
 
 router.get("/", async (req, res) => {
   try {
-    res.send("Design route");
+    const designs = await Design.find();
+    res.json(designs);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: "Server Error!" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const design = await Design.findById(req.params.id);
+    res.json(design);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: "Server Error!" });
@@ -23,9 +34,14 @@ router.post("/", upload.array("photos"), async (req, res) => {
       // const result = await drive.uploadFile(file.buffer);
       arr.push(result);
     }
-    res.json(arr);
+    // console.log("array generated");
+    const design = new Design({
+      info: [...arr],
+    });
+    await design.save();
+    res.json({ design });
   } catch (err) {
-    res.json({ msg: "Server error" });
+    res.status(500).json({ msg: "Server Error!" });
   }
 });
 

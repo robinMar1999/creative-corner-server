@@ -1,6 +1,4 @@
 const { google } = require("googleapis");
-const path = require("path");
-const fs = require("fs");
 const config = require("config");
 const streamifier = require("streamifier");
 const mime = require("mime-types");
@@ -24,11 +22,12 @@ const uploadFile = async (file) => {
   // console.log(file);
   const fileExtension = (file.originalname.match(/\.+[\S]+$/) || [])[0];
   try {
+    const fileMetadata = {
+      name: `${file.fieldname}-${Date.now()}${fileExtension}`,
+      parents: [config.DRIVE_FOLDER_ID],
+    };
     const response = await drive.files.create({
-      requestBody: {
-        name: `${file.fieldname}-${Date.now()}${fileExtension}`,
-        mimeType: mime.lookup(fileExtension),
-      },
+      resource: fileMetadata,
       media: {
         mimeType: mime.lookup(fileExtension),
         body: streamifier.createReadStream(file.buffer),
@@ -41,7 +40,11 @@ const uploadFile = async (file) => {
         type: "anyone",
       },
     });
-    return { id: response.data.id, url: `${BASE_URL}?id=${response.data.id}` };
+    return {
+      id: response.data.id,
+      url: `${BASE_URL}?id=${response.data.id}`,
+      name: response.data.name,
+    };
   } catch (err) {
     console.log(err.message);
     throw new Error(err.message);
