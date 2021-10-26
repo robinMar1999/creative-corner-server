@@ -3,13 +3,23 @@ const config = require("config");
 const streamifier = require("streamifier");
 const mime = require("mime-types");
 
+const GOOGLE_CLIENT_ID =
+  process.env.GOOGLE_CLIENT_ID || config.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET =
+  process.env.GOOGLE_CLIENT_SECRET || config.GOOGLE_CLIENT_SECRET;
+const GOOGLE_REDIRECT_URI =
+  process.env.GOOGLE_REDIRECT_URI || config.GOOGLE_REDIRECT_URI;
+const GOOGLE_REFRESH_TOKEN =
+  process.env.GOOGLE_REFRESH_TOKEN || config.GOOGLE_REFRESH_TOKEN;
+const DRIVE_FOLDER_ID = process.env.DRIVE_FOLDER_ID || config.DRIVE_FOLDER_ID;
+
 const oauth2client = new google.auth.OAuth2(
-  config.GOOGLE_CLIENT_ID,
-  config.GOOGLE_CLIENT_SECRET,
-  config.GOOGLE_REDIRECT_URI
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_REDIRECT_URI
 );
 
-oauth2client.setCredentials({ refresh_token: config.GOOGLE_REFRESH_TOKEN });
+oauth2client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
 
 const drive = google.drive({
   version: "v3",
@@ -24,7 +34,7 @@ const uploadFile = async (file) => {
   try {
     const fileMetadata = {
       name: `${file.fieldname}-${Date.now()}${fileExtension}`,
-      parents: [config.DRIVE_FOLDER_ID],
+      parents: [DRIVE_FOLDER_ID],
     };
     const response = await drive.files.create({
       resource: fileMetadata,
