@@ -4,14 +4,15 @@ const streamifier = require("streamifier");
 const mime = require("mime-types");
 
 const GOOGLE_CLIENT_ID =
-  process.env.GOOGLE_CLIENT_ID || config.GOOGLE_CLIENT_ID;
+  process.env.GOOGLE_CLIENT_ID || config.get("GOOGLE_CLIENT_ID");
 const GOOGLE_CLIENT_SECRET =
-  process.env.GOOGLE_CLIENT_SECRET || config.GOOGLE_CLIENT_SECRET;
+  process.env.GOOGLE_CLIENT_SECRET || config.get("GOOGLE_CLIENT_SECRET");
 const GOOGLE_REDIRECT_URI =
-  process.env.GOOGLE_REDIRECT_URI || config.GOOGLE_REDIRECT_URI;
+  process.env.GOOGLE_REDIRECT_URI || config.get("GOOGLE_REDIRECT_URI");
 const GOOGLE_REFRESH_TOKEN =
-  process.env.GOOGLE_REFRESH_TOKEN || config.GOOGLE_REFRESH_TOKEN;
-const DRIVE_FOLDER_ID = process.env.DRIVE_FOLDER_ID || config.DRIVE_FOLDER_ID;
+  process.env.GOOGLE_REFRESH_TOKEN || config.get("GOOGLE_REFRESH_TOKEN");
+const DRIVE_FOLDER_ID =
+  process.env.DRIVE_FOLDER_ID || config.get("DRIVE_FOLDER_ID");
 
 const oauth2client = new google.auth.OAuth2(
   GOOGLE_CLIENT_ID,
